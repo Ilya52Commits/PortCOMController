@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Serial Port Interface";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script>
+        async function connect() {
+            const settings = {
+                portName: document.getElementById('portName').value,
+                baudRate: parseInt(document.getElementById('baudRate').value),
+                dataBits: parseInt(document.getElementById('dataBits').value),
+                stopBits: document.getElementById('stopBits').value,
+                parity: document.getElementById('parity').value,
+                handshake: document.getElementById('handshake').value
+            };
+
+            const response = await fetch('/api/SerialPort/connect', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(settings)
+            });
+
+            const result = await response.text();
+            alert(result);
+        }
+
+        async function disconnect() {
+            const response = await fetch('/api/SerialPort/disconnect', {
+                method: 'POST'
+            });
+
+            const result = await response.text();
+            alert(result);
+        }
+    </script>
+</head>
+<body>
+    <h1>Настройки порта</h1>
+    <label for="portName">Выбор порта:</label>
+    <input type="text" id="portName">
+    <br>
+
+    <label for="baudRate">Бит в секунду:</label>
+    <input type="number" id="baudRate">
+    <br>
+
+    <label for="dataBits">Биты данных:</label>
+    <input type="number" id="dataBits">
+    <br>
+
+    <label for="stopBits">Стоповые биты:</label>
+    <input type="text" id="stopBits">
+    <br>
+
+    <label for="parity">Четность:</label>
+    <input type="text" id="parity">
+    <br>
+
+    <label for="handshake">Управление потоком:</label>
+    <input type="text" id="handshake">
+    <br>
+
+    <button onclick="connect()">Подключиться</button>
+    <button onclick="disconnect()">Отключиться</button>
+</body>
+</html>
